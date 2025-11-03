@@ -36,6 +36,7 @@ type BasicAuth struct {
 type HttpOpt struct {
 	Headers   map[string]string
 	BasicAuth *BasicAuth
+	Timeout   time.Duration
 }
 
 // set request header
@@ -86,6 +87,11 @@ func HttpPost2(postUrl string, contentType string, body io.Reader, opt *HttpOpt)
 		if err := opt.fillRequest(req); err != nil {
 			return nil, err
 		}
+
+		if opt.Timeout > 0 {
+			client.Timeout = opt.Timeout
+		}
+
 	}
 
 	resp, err := client.Do(req)
